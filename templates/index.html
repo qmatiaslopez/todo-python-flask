@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 Mi Lista de Tareas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Mi Lista de Tareas</h1>
+        
+        <form class="add-form" action="/add" method="post">
+            <input type="text" name="task" placeholder="Escribe una nueva tarea..." required>
+            <select name="importance" required>
+                <option value="1" class="high">🔴 Alta</option>
+                <option value="2" class="medium">🟡 Media</option>
+                <option value="3" class="low" selected>🟢 Baja</option>
+            </select>
+            <button type="submit">Agregar Tarea</button>
+        </form>
+        
+        {% if todos %}
+            <div class="todo-list">
+                {% for todo in todos %}
+                <div class="todo-item {% if todo.completed %}completed{% endif %} importance-{{ todo.importance|default(3) }}">
+                    <div class="importance-indicator">
+                        {% if todo.importance == 1 %}🔴{% elif todo.importance == 2 %}🟡{% else %}🟢{% endif %}
+                    </div>
+                    <div class="todo-content">
+                        <div class="todo-text {% if todo.completed %}completed{% endif %}">
+                            <div class="task-name">{{ todo.task }}</div>
+                            <div class="todo-meta">
+                                Creada: {{ todo.created_at }} | 
+                                Importancia: 
+                                {% if todo.importance == 1 %}Alta
+                                {% elif todo.importance == 2 %}Media
+                                {% else %}Baja{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="todo-actions">
+                        <a href="/complete/{{ todo.id }}" class="btn-small btn-complete">
+                            {% if todo.completed %}Desmarcar{% else %}Completar{% endif %}
+                        </a>
+                        <a href="/edit/{{ todo.id }}" class="btn-small btn-edit">Editar</a>
+                        <a href="/delete/{{ todo.id }}" class="btn-small btn-delete">Eliminar</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="bottom-actions">
+                <a href="/clear" class="btn-clear" onclick="return confirm('¿Estás seguro de que quieres eliminar todas las tareas?')">
+                    Limpiar todas las tareas
+                </a>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>No hay tareas pendientes. ¡Agrega una nueva tarea para comenzar!</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✏️ Editar Tarea</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>✏️ Editar Tarea</h1>
+        
+        <form class="edit-form" action="/edit/{{ todo.id }}" method="post">
+            <div class="form-group">
+                <label for="task">Descripción de la tarea:</label>
+                <input type="text" id="task" name="task" value="{{ todo.task }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="importance">Importancia:</label>
+                <select id="importance" name="importance" required>
+                    <option value="1" {% if todo.importance == 1 %}selected{% endif %}>🔴 Alta</option>
+                    <option value="2" {% if todo.importance == 2 %}selected{% endif %}>🟡 Media</option>
+                    <option value="3" {% if todo.importance == 3 or not todo.importance %}selected{% endif %}>🟢 Baja</option>
+                </select>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Guardar Cambios</button>
+                <a href="/" class="btn-cancel">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
